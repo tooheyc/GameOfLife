@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<title>Game of Life</title>
+	<link href="./life.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="./life.js"></script>
+</head>
+<body>
+	<div id="buttonWrap">
+		<button id="buttn" class="buttn" onclick="reIterate()">START</button>
+		<button id="buttn2" class="buttn" onclick="clearBoard()">CLEAR</button>
+		<button id="buttn3" class="buttn" onclick="resetBoard()">RESET</button>
+		<select id="grid" class="dropdown" onchange="changeGrid();">
+			<option value="29">SMALL</option>
+			<option value="57">LARGE</option>
+		</select>
+		<select id="speed" class="dropdown" onchange="changeSpeed();">
+			<option value="1000">SLOW</option>
+			<option value="250">FASTER</option>
+			<option value="50">FASTEST</option>
+		</select>
+		<button id="lifeRules" class="buttn buttn2" onclick="explain()">ABOUT</button>
+	</div>
+	<div id='wrapper'>
+		<div id='game'>Game of Life<div id='counter'>GENERATION: 0</div>
+			<div id='gridToggle'>GRID: <button id="neighbor" class="buttn buttonSmall" onclick="toggleNeighbor();">SHOW</button></div>
+		</div>
+	</div>
+	<div id='Amap' class='Amap'></div>
+	<div id='explanation'>
+	<div class='tightHead'>The Game of Life</div>
+	<div class='bod'>The rules for the Game of Life were devised by British mathematician John Horton Conway. In this version, the numbers in each cell represent the number of live neighbors next to that cell. With each iteration, the following occurs:</div>
+	<div class='bod'><ul>
+	<li>Any live cell with fewer than two live neighbors dies, as if caused by under-population.</li><li>Any live cell with two or three live neighbors lives on to the next generation.</li>
+	<li>Any live cell with more than three live neighbors dies, as if by over-population.</li>
+	<li>Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.</li>
+	</ul></div>
+	<div class='bod'>To see the inner workings, set the grid to SHOW. The RESET button resets the default pattern. Changing the SIZE also resets the default pattern, spacing the elements appropriately to the new grid, which changes the outcome. The SPEED can be changed at any time without affecting the pattern. The CLEAR button creates a blank slate. To create your own pattern, click on cells to alter their living status.<br><br>To learn more, see <a href='https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life' target='_blank'>Wiki page.</a></div>
+	<div class='buttn3'><button id='lifeRules' class='buttn' onclick='explainClose()'>CLOSE</button></div>
+	</div>
+</body>
+<script type="text/javascript">initialize();</script>
+</html>

@@ -144,43 +144,55 @@ function toggleCell(cellId, r, c) {
 	displayGrid();
 }
 
-function Iterate() {
-	// If living and has more than 3 or less than 2 neigbors, the cell dies. If dead and has 3 neighbors, it is born. 
+function applyLifeRules() {
+	// If living and has more than 3 or less than 2 neigbors, the cell dies. 
+	// If dead and has 3 neighbors, it is born. 
 	// Others don't change.
-	var noCellFlipped = true;
-	for(i = 0; i < lifeSettings.mapSize; i++) {
-		for(j = 0; j < lifeSettings.mapSize; j++) {
-			if( (lifeMap[i][j].living && (lifeMap[i][j].neighbors > 3 || lifeMap[i][j].neighbors < 2))
-			 || (!lifeMap[i][j].living && lifeMap[i][j].neighbors == 3) ) {
-				lifeMap[i][j].living = !lifeMap[i][j].living;
-				noCellFlipped = false;
+	return new Promise(function(resolve,reject) {
+		var noCellFlipped = true;
+		for(i = 0; i < lifeSettings.mapSize; i++) {
+			for(j = 0; j < lifeSettings.mapSize; j++) {
+				if( (lifeMap[i][j].living && (lifeMap[i][j].neighbors > 3 || lifeMap[i][j].neighbors < 2))
+				 || (!lifeMap[i][j].living && lifeMap[i][j].neighbors == 3) ) {
+					lifeMap[i][j].living = !lifeMap[i][j].living;
+					noCellFlipped = false;
+				}
 			}
 		}
-	}
-	
-	// If no cell changed living status, we're done.
-	if(noCellFlipped) {
-		haltIterate();
-	}
-	
-	document.getElementById('counter').innerHTML = "GENERATION: "+lifeSettings.count;
-	document.getElementById('gridToggle').innerHTML = 'GRID: <button id="neighbor" class="buttn buttonSmall" onclick="toggleNeighbor();">'+lifeSettings.gridButton+'</button>';
-	
-	var boardCleared = true;
-	for(i = 0; i < lifeSettings.mapSize; i++) {
-		for(j = 0; j < lifeSettings.mapSize; j++) {
-			if(lifeMap[i][j].living) boardCleared = false;
-			countNeighbors(i,j);
+		// If no cell changed living status, we're done.
+		if(noCellFlipped) {
+			haltIterate();
+			reject(noCellFlipped);
+		} else {
+			resolve(noCellFlipped);
 		}
-	}
-	
-	if(boardCleared) {
-		haltIterate();
-	} else {
-		lifeSettings.count++;
-	}
+	});
+}
 
-	displayGrid();
+function Iterate() {
+	
+	applyLifeRules().then(function() {
+		document.getElementById('counter').innerHTML = "GENERATION: "+lifeSettings.count;
+		document.getElementById('gridToggle').innerHTML = 'GRID: <button id="neighbor" class="buttn buttonSmall" onclick="toggleNeighbor();">'+lifeSettings.gridButton+'</button>';
+	
+		// After applying life rules the neighbor count must be recalculated.
+		var boardCleared = true;
+		for(i = 0; i < lifeSettings.mapSize; i++) {
+			for(j = 0; j < lifeSettings.mapSize; j++) {
+				if(lifeMap[i][j].living) boardCleared = false;
+				countNeighbors(i,j);
+			}
+		}
+	
+		if(boardCleared) {
+			haltIterate();
+		} else {
+			lifeSettings.count++;
+		}
+	}).then(function(response) { 
+		// After applying life rules and recalculating neighbor counts, refresh the display.
+		displayGrid();
+	});
 }
 
 // Iterate over grid turning on/off cells according to their living status.

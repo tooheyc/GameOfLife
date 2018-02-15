@@ -189,10 +189,10 @@ function Iterate() {
 		} else {
 			lifeSettings.count++;
 		}
-	}).then(function(response) { 
+	}).then(function() { 
 		// After applying life rules and recalculating neighbor counts, refresh the display.
 		displayGrid();
-	});
+	}).catch((err) => {});
 }
 
 // Iterate over grid turning on/off cells according to their living status.
